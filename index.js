@@ -2,6 +2,14 @@ const crypto = require("crypto");
 
 // TOTP and HOTP use the same algorithm, the only difference
 // is that the "count" param in TOTPs is time based
+
+/**
+ * Returns a TOTP
+ * @param {string} algorithm can be sha1, sha256 or sha512
+ * @param {string} secret any string
+ * @param {number} count the counter for the TOTP
+ * @param {number} digits the number of digits required
+ */
 function generateTOTP(algorithm, secret, count, digits) {
 
   // Convert the string to binary data in the form of a sequence of bytes
@@ -85,14 +93,14 @@ function getCount(date = new Date().toString()) {
 // Use getCount() with no params to get the counter for the unix epoch time
 // in steps of 30 seconds
 
-// Test with the first date
+// Example with the first date
 let time = getCount("1970-01-01 00:00:59 UTC");
 
 let secret = "12345678901234567890";
 let totp = generateTOTP("sha1", secret, time, 8);
 console.log("sha1  ", totp, "should be 94287082");
 
-// To create a TOTP password with sha256 and sha512 the secret length must
+// To create a TOTP password with sha256 and sha512 the secret length should
 // be 32 for sha256 and 64 for sha512.
 // Look up the errata of 6238 for more (https://www.rfc-editor.org/errata/eid5132)
 
@@ -110,7 +118,7 @@ secret = secret.substr(0, 64);
 totp = generateTOTP("sha512", secret, time, 8)
 console.log("sha512", totp, "should be 90693936");
 
-// Testing with second date
+// Example with second date
 time = getCount("2005-03-18 01:58:29 UTC");
 
 secret = "12345678901234567890";
